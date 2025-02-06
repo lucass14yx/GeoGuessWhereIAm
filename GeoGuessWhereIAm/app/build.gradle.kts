@@ -45,6 +45,7 @@ dependencies {
     implementation(libs.material)
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
+    implementation ("com.google.android.material:material:1.12.0")
     implementation(libs.play.services.maps)
     implementation(libs.osmdroid.android)
     testImplementation(libs.junit)
