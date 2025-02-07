@@ -1,7 +1,6 @@
 package com.example.geoguesswhereiam
 
 object SeleccionUsuario {
-    var dificultad = ""
-    var lugar = ""
-
+    var dificultad: Int = 0
+    lateinit var imagen: Imagen
 }
