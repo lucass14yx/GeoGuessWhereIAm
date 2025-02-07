@@ -6,6 +6,6 @@ object ImagenesProvider {
         "navarra",
         "pontevedra",
         "sevilla",
-        "toledo"
+        "toledoo"
     )
 }

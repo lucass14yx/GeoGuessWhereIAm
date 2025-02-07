@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">GeoGuessWhereIAm</string>
+    <string name="seleccion_lugar">Selecciona el lugar que pretendes adivinar 😉</string>
+    <string name="facil">Fácil 😃</string>
+    <string name="media">Media 😐</string>
+    <string name="dificil">Dificil 😈</string>
+    <string name="selecciona_dificultad">Selecciona la dificultad para jugar 🎮</string>
 </resources>
