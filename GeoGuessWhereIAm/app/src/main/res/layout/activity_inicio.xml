@@ -50,7 +50,7 @@
         app:cardBackgroundColor="@color/design_default_color_background"/>
 
     <Button
-        android:id="@+id/button3"
+        android:id="@+id/btnFacil"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
@@ -63,21 +63,21 @@
         app:layout_constraintVertical_bias="0.264" />
 
     <Button
-        android:id="@+id/button4"
+        android:id="@+id/btnMedia"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/media"
         android:backgroundTint="@color/black"
         android:textColor="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/button5"
+        app:layout_constraintEnd_toStartOf="@+id/btnDificil"
         app:layout_constraintHorizontal_bias="0.482"
-        app:layout_constraintStart_toEndOf="@+id/button3"
+        app:layout_constraintStart_toEndOf="@+id/btnFacil"
         app:layout_constraintTop_toBottomOf="@+id/textView2"
         app:layout_constraintVertical_bias="0.264" />
 
     <Button
-        android:id="@+id/button5"
+        android:id="@+id/btnDificil"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="24dp"
@@ -89,15 +89,27 @@
         app:layout_constraintTop_toBottomOf="@+id/textView2"
         app:layout_constraintVertical_bias="0.264" />
 
+    <Button
+        android:id="@+id/btnJugar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/black"
+        android:text="@string/jugar"
+        android:textColor="@color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnMedia" />
+
     <TextView
         android:id="@+id/textView2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="28dp"
+        android:layout_marginTop="12dp"
+        android:backgroundTint="@color/white"
         android:text="@string/selecciona_dificultad"
         android:textColor="@color/white"
         android:textSize="18dp"
-        android:backgroundTint="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.495"
         app:layout_constraintStart_toStartOf="parent"

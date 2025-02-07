@@ -1,5 +1,6 @@
 package com.example.geoguesswhereiam
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -8,6 +9,7 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearSnapHelper
+import androidx.recyclerview.widget.RecyclerView
 import com.example.geoguesswhereiam.databinding.ActivityInicioBinding
 import recyclerview.AdaptadorImagenes
 import recyclerview.ImagenesProvider
@@ -20,6 +22,35 @@ class Inicio : AppCompatActivity() {
         binding = ActivityInicioBinding.inflate(layoutInflater)
         setContentView(binding.root)
         initRecyclerView()
+
+        binding.btnFacil.setOnClickListener {
+            SeleccionUsuario.dificultad = 1 // "facil"
+        }
+        binding.btnMedia.setOnClickListener {
+            SeleccionUsuario.dificultad = 2 // "medio"
+        }
+        binding.btnDificil.setOnClickListener {
+            SeleccionUsuario.dificultad = 3 //"dificil"
+        }
+
+        binding.btnJugar.setOnClickListener {
+            val intent = Intent(this, Mapa::class.java)
+            startActivity(intent)
+            finish()
+        }
+
+        binding.rvImages.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+
+            // Asignar la Imagen de la lista a la variable lugar
+            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                super.onScrollStateChanged(recyclerView, newState)
+                val layoutManager = recyclerView.layoutManager as LinearLayoutManager
+                val position = layoutManager.findFirstVisibleItemPosition()
+                SeleccionUsuario.imagen = ImagenesProvider.imagenesList[position]
+            }
+
+        })
+
     }
 
     private fun initRecyclerView() {
@@ -38,6 +69,4 @@ class Inicio : AppCompatActivity() {
 
 
     }
-
-
 }
