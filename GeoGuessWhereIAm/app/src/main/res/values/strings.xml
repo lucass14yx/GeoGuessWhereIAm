@@ -6,4 +6,5 @@
     <string name="dificil">Dificil 😈</string>
     <string name="selecciona_dificultad">Selecciona la dificultad para jugar 🎮</string>
     <string name="jugar">Jugar</string>
+    <string name="puntuacion">Puntuación</string>
 </resources>

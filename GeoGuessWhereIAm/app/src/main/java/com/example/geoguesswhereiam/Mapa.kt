@@ -27,13 +27,15 @@ import org.osmdroid.views.overlay.compass.CompassOverlay
 import org.osmdroid.views.overlay.compass.InternalCompassOrientationProvider
 import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay
+import com.example.geoguesswhereiam.SeleccionUsuario
 
 
 class Mapa : AppCompatActivity(), MapEventsReceiver {
     private val MULTIPLE_PERMISSION_REQUEST_CODE: Int = 4
     private lateinit var mapView: MapView
     private lateinit var binding: ActivityMapaBinding
-
+    private var radio : Int = 0
+    private var puntuacion : Int = 0
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -47,6 +49,22 @@ class Mapa : AppCompatActivity(), MapEventsReceiver {
         setContentView(binding.root)
         mapView = binding.map
 
+        var dificultad = SeleccionUsuario.dificultad
+        
+        if(dificultad == 1)
+            intentos = 15
+            binding.txtPuntuacion.text = intentos.toString()
+
+        else if(dificultad == 2)
+            intentos = 10
+            binding.txtPuntuacion.text = intentos.toString()
+
+        else if(dificultad == 3)
+            intentos = 5
+            binding.txtPuntuacion.text = intentos.toString()
+
+        Toast.makeText(this, "Lugar seleccionado: ${SeleccionUsuario.imagen.nombre}", Toast.LENGTH_LONG).show()
+        radio = SeleccionUsuario.radio
         setupMap()
         createMarkers()
         myLocation()
@@ -161,7 +179,7 @@ class Mapa : AppCompatActivity(), MapEventsReceiver {
                 //Centrar y hacer Zoom hacia un marcador
                 mapView.controller.setCenter(mLocationOverlay.myLocation);
                 mapView.controller.animateTo(mLocationOverlay.myLocation)
-                mapView.controller.setZoom(18.0)
+                mapView.controller.setZoom(7.3)
                 mapView.invalidate() // Redibujar el mapa
             }
         }
@@ -169,23 +187,7 @@ class Mapa : AppCompatActivity(), MapEventsReceiver {
     }
 
     fun createMarkers() {
-        //Crear marcador IES Maestre
-        val latitudIesMaestre = 38.9908
-        val longitudIesMaestre = -3.9206
-        val marker = org.osmdroid.views.overlay.Marker(mapView)
-        marker.position = GeoPoint(latitudIesMaestre, longitudIesMaestre)
-        marker.title = "IES Maestre de Calatrava"
-        marker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
-        mapView.overlays.add(marker)
 
-        //Crear marcador CIFP Virgen de Gracia
-        val latitudVirgenGracia = 38.6929
-        val longitudVirgenGracia = -4.1086
-        val markerVG = org.osmdroid.views.overlay.Marker(mapView)
-        markerVG.position = GeoPoint(latitudVirgenGracia, longitudVirgenGracia)
-        markerVG.title = "CIFP Virgen de Gracia"
-        markerVG.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
-        mapView.overlays.add(markerVG)
 
     }
 
@@ -197,13 +199,18 @@ class Mapa : AppCompatActivity(), MapEventsReceiver {
         marker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
         mapView.overlays.add(marker)
 
-        // Agregar círculo de un radio de 75metros
+        // Agregar círculo de un radio dependiendo de la dificultad
         val circle = Polygon(mapView)
-        circle.points = Polygon.pointsAsCircle(point, 75.0)
+        circle.points = Polygon.pointsAsCircle(point, radio.toDouble())
         circle.fillPaint.color= Color.argb(50, 0, 0, 255) // Azul semitransparente
         circle.fillPaint.strokeWidth = 2.0f
         mapView.overlays.add(circle)
-
+        var acierto : Boolean = circle.isCloseTo(point,radio.toDouble(),binding.map)
+        if (acierto){
+            print("ACIERTO")
+        } else {
+            puntuacion--
+        }
         mapView.invalidate() // Redibujar el mapa
         return true
     }
@@ -212,4 +219,13 @@ class Mapa : AppCompatActivity(), MapEventsReceiver {
         // Manejar pulsación larga si es necesario
         return false
     }
+
+
+
+}
+
+// Implementar
+private fun aciertoFallo(){
+
+
 }

@@ -25,18 +25,22 @@ class Inicio : AppCompatActivity() {
 
         binding.btnFacil.setOnClickListener {
             SeleccionUsuario.dificultad = 1 // "facil"
+            SeleccionUsuario.radio = 100
         }
         binding.btnMedia.setOnClickListener {
             SeleccionUsuario.dificultad = 2 // "medio"
+            SeleccionUsuario.radio = 50
         }
         binding.btnDificil.setOnClickListener {
             SeleccionUsuario.dificultad = 3 //"dificil"
+            SeleccionUsuario.radio = 25
         }
 
         binding.btnJugar.setOnClickListener {
             val intent = Intent(this, Mapa::class.java)
+            asignarImagenVisible(binding)
             startActivity(intent)
-            finish()
+
         }
 
         binding.rvImages.addOnScrollListener(object : RecyclerView.OnScrollListener() {
@@ -69,4 +73,13 @@ class Inicio : AppCompatActivity() {
 
 
     }
+
+    private fun asignarImagenVisible(binding:ActivityInicioBinding){
+
+        val layoutManager = binding.rvImages.layoutManager as LinearLayoutManager
+        val position = layoutManager.findFirstVisibleItemPosition()
+        SeleccionUsuario.imagen = ImagenesProvider.imagenesList[position]
+
+    }
+
 }
