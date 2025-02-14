@@ -1,14 +1,18 @@
 package com.example.geoguesswhereiam
 
 import android.Manifest
+import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.graphics.Rect
 import android.os.Bundle
+import android.os.Handler
 import android.util.DisplayMetrics
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -29,13 +33,14 @@ import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay
 import com.example.geoguesswhereiam.SeleccionUsuario
 
-
 class Mapa : AppCompatActivity(), MapEventsReceiver {
     private val MULTIPLE_PERMISSION_REQUEST_CODE: Int = 4
     private lateinit var mapView: MapView
     private lateinit var binding: ActivityMapaBinding
-    private var radio : Int = 0
-    private var puntuacion : Int = 0
+    private var radio: Int = 0
+    private var puntuacion: Int = 0
+    private var intentos: Int = 0
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -50,19 +55,19 @@ class Mapa : AppCompatActivity(), MapEventsReceiver {
         mapView = binding.map
 
         var dificultad = SeleccionUsuario.dificultad
-        
-        if(dificultad == 1)
+
+        if (dificultad == 1) {
             intentos = 15
             binding.txtPuntuacion.text = intentos.toString()
 
-        else if(dificultad == 2)
+        } else if (dificultad == 2) {
             intentos = 10
             binding.txtPuntuacion.text = intentos.toString()
 
-        else if(dificultad == 3)
+        } else if (dificultad == 3) {
             intentos = 5
             binding.txtPuntuacion.text = intentos.toString()
-
+        }
         Toast.makeText(this, "Lugar seleccionado: ${SeleccionUsuario.imagen.nombre}", Toast.LENGTH_LONG).show()
         radio = SeleccionUsuario.radio
         setupMap()
@@ -97,7 +102,7 @@ class Mapa : AppCompatActivity(), MapEventsReceiver {
         }
     }
 
-    override fun onRequestPermissionsResult(requestCode: Int,permissions: Array<out String>,grantResults: IntArray) {
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         when (requestCode) {
             MULTIPLE_PERMISSION_REQUEST_CODE -> {
@@ -128,7 +133,7 @@ class Mapa : AppCompatActivity(), MapEventsReceiver {
         }
     }
 
-    private fun setupMap(){
+    private fun setupMap() {
         //Inicializar map
         mapView.setClickable(true);
         mapView.setDestroyMode(false);
@@ -147,7 +152,7 @@ class Mapa : AppCompatActivity(), MapEventsReceiver {
         mapView.overlays.add(compassOverlay)
 
         //agregar barra de escala en el mapa
-        val dm : DisplayMetrics = this.resources.displayMetrics
+        val dm: DisplayMetrics = this.resources.displayMetrics
         val scaleBarOverlay = ScaleBarOverlay(mapView)
         scaleBarOverlay.setCentred(true)
         //ubicacion en la app de la barra de escala
@@ -188,11 +193,10 @@ class Mapa : AppCompatActivity(), MapEventsReceiver {
 
     fun createMarkers() {
 
-
     }
 
     override fun singleTapConfirmedHelper(point: GeoPoint?): Boolean {
-        //Maneja el evento clic del mapa
+        // Maneja el evento clic del mapa
         // Agregar marcador
         val marker = Marker(mapView)
         marker.position = point
@@ -202,14 +206,39 @@ class Mapa : AppCompatActivity(), MapEventsReceiver {
         // Agregar círculo de un radio dependiendo de la dificultad
         val circle = Polygon(mapView)
         circle.points = Polygon.pointsAsCircle(point, radio.toDouble())
-        circle.fillPaint.color= Color.argb(50, 0, 0, 255) // Azul semitransparente
+        circle.fillPaint.color = Color.argb(50, 0, 0, 255) // Azul semitransparente
         circle.fillPaint.strokeWidth = 2.0f
         mapView.overlays.add(circle)
-        var acierto : Boolean = circle.isCloseTo(point,radio.toDouble(),binding.map)
-        if (acierto){
-            print("ACIERTO")
+        val geoPoint = GeoPoint(SeleccionUsuario.imagen.altitud, SeleccionUsuario.imagen.latitud)
+        val acierto: Boolean = circle.isCloseTo(geoPoint, radio.toDouble(), mapView)
+        val intent = Intent(this, Inicio::class.java)
+        if (acierto) {
+            // Dialog de acierto
+            if (!isFinishing && !isDestroyed) {
+                showDialog(this)
+            }
+            Handler().postDelayed({
+                if (!isFinishing && !isDestroyed) {
+                    // Volver a la vista anterior
+                    startActivity(intent)
+                    finish()
+                }
+            }, 3000)
         } else {
             puntuacion--
+            if (puntuacion == 0) {
+                // Dialog de fallo
+                if (!isFinishing && !isDestroyed) {
+                    showDialogFallo(this)
+                }
+                Handler().postDelayed({
+                    if (!isFinishing && !isDestroyed) {
+                        // Volver a la vista anterior
+                        startActivity(intent)
+                        finish()
+                    }
+                }, 3000)
+            }
         }
         mapView.invalidate() // Redibujar el mapa
         return true
@@ -219,13 +248,35 @@ class Mapa : AppCompatActivity(), MapEventsReceiver {
         // Manejar pulsación larga si es necesario
         return false
     }
-
-
-
 }
 
-// Implementar
-private fun aciertoFallo(){
+private fun showDialog(context: Context) {
+    val builder = AlertDialog.Builder(context)
+    builder.setTitle("Victoria")
+    builder.setMessage("Has acertado la ubicación: " + SeleccionUsuario.imagen.nombre)
+    builder.setPositiveButton("Accept") { dialog, _ ->
+        dialog.dismiss()
+    }
+    val dialog = builder.create()
+    dialog.show()
+}
 
+private fun showDialogFallo(context: Context) {
+    val builder = AlertDialog.Builder(context)
+    builder.setTitle("Derrota")
+    builder.setMessage("Te has quedado sin intentos la ubicación era: " + SeleccionUsuario.imagen.nombre)
+    builder.setPositiveButton("Accept") { dialog, _ ->
+        dialog.dismiss()
+    }
+    val dialog = builder.create()
+    dialog.show()
+}
 
+fun Polygon.isCloseTo(point: GeoPoint?, radius: Double, mapView: MapView): Boolean {
+    if (point == null) {
+        return false
+    }
+    val center = this.actualPoints[0]
+    val distance = point.distanceToAsDouble(center)
+    return distance <= radius // Verdadero si la distancia es menor o igual al radio, falso si no lo es
 }

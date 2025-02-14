@@ -25,22 +25,22 @@ class Inicio : AppCompatActivity() {
 
         binding.btnFacil.setOnClickListener {
             SeleccionUsuario.dificultad = 1 // "facil"
-            SeleccionUsuario.radio = 100
+            SeleccionUsuario.radio = 10000
         }
         binding.btnMedia.setOnClickListener {
             SeleccionUsuario.dificultad = 2 // "medio"
-            SeleccionUsuario.radio = 50
+            SeleccionUsuario.radio = 5000
         }
         binding.btnDificil.setOnClickListener {
             SeleccionUsuario.dificultad = 3 //"dificil"
-            SeleccionUsuario.radio = 25
+            SeleccionUsuario.radio = 2500
         }
 
         binding.btnJugar.setOnClickListener {
             val intent = Intent(this, Mapa::class.java)
             asignarImagenVisible(binding)
             startActivity(intent)
-
+            finish()
         }
 
         binding.rvImages.addOnScrollListener(object : RecyclerView.OnScrollListener() {

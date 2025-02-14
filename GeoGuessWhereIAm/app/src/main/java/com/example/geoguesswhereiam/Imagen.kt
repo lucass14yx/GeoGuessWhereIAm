@@ -4,7 +4,6 @@ class Imagen(
     var recImagen: Int,
     var altitud: Double,
     var latitud: Double,
-    var nombre: String = ""
-) {
-
-}
+    var nombre: String = "",
+    var acertada: Boolean = false
+) 
