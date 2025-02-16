@@ -194,6 +194,7 @@ class Mapa : AppCompatActivity(), MapEventsReceiver {
             if (!isFinishing && !isDestroyed) {
                 showDialog(this)
                 SeleccionUsuario.puntosTotales += 1
+                SeleccionUsuario.imagen.acertada = true
             }
             Handler().postDelayed({
                 if (!isFinishing && !isDestroyed) {

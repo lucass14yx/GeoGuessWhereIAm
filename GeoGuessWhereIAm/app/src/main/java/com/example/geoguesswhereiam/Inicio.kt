@@ -2,6 +2,7 @@ package com.example.geoguesswhereiam
 
 import android.content.Intent
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
@@ -44,6 +45,16 @@ class Inicio : AppCompatActivity() {
         }
 
         binding.btnJugar.setOnClickListener {
+            if(SeleccionUsuario.dificultad == 0) {
+                Toast.makeText(this, "Selecciona una dificultad", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+            if(SeleccionUsuario.imagen.acertada) {
+                Toast.makeText(this, "Ya has acertado este lugar!", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
             val intent = Intent(this, Mapa::class.java)
             asignarImagenVisible(binding)
             startActivity(intent)

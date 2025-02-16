@@ -23,6 +23,7 @@ class MainActivity : AppCompatActivity() {
         lifecycleScope.launch {
             delay(4000) // Espera 4 segundos
             startActivity(intent)
+            finish()
         }
 
     }
