@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -11,9 +12,12 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearSnapHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.example.geoguesswhereiam.databinding.ActivityInicioBinding
+import org.osmdroid.util.GeoPoint
+import kotlin.math.acos
+import kotlin.math.cos
+import kotlin.math.sin
 import recyclerview.AdaptadorImagenes
 import recyclerview.ImagenesProvider
-
 
 class Inicio : AppCompatActivity() {
     private lateinit var binding: ActivityInicioBinding
@@ -21,6 +25,9 @@ class Inicio : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityInicioBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        // Configurar Toolbar
+        val toolbar: Toolbar = binding.toolbar
+        setSupportActionBar(toolbar)
         initRecyclerView()
 
         binding.btnFacil.setOnClickListener {
@@ -70,16 +77,26 @@ class Inicio : AppCompatActivity() {
         // Crear un DividerItemDecoration y agregarlo al RecyclerView
         val decoration = DividerItemDecoration(this, manager.orientation)
         binding.rvImages.addItemDecoration(decoration)
-
-
     }
 
-    private fun asignarImagenVisible(binding:ActivityInicioBinding){
-
+    private fun asignarImagenVisible(binding: ActivityInicioBinding) {
         val layoutManager = binding.rvImages.layoutManager as LinearLayoutManager
         val position = layoutManager.findFirstVisibleItemPosition()
         SeleccionUsuario.imagen = ImagenesProvider.imagenesList[position]
-
     }
 
+    private fun estaDentroDelRadio(puntoSeleccionado: GeoPoint, puntoObjetivo: GeoPoint, radio: Double): Boolean {
+        val radioTierra = 6371000.0 // Radio de la Tierra en metros
+
+        val lat1 = Math.toRadians(puntoSeleccionado.latitude)
+        val lon1 = Math.toRadians(puntoSeleccionado.longitude)
+        val lat2 = Math.toRadians(puntoObjetivo.latitude)
+        val lon2 = Math.toRadians(puntoObjetivo.longitude)
+
+        val distancia = radioTierra * acos(
+            sin(lat1) * sin(lat2) + cos(lat1) * cos(lat2) * cos(lon2 - lon1)
+        )
+
+        return distancia <= radio
+    }
 }

@@ -31,7 +31,9 @@ import org.osmdroid.views.overlay.compass.CompassOverlay
 import org.osmdroid.views.overlay.compass.InternalCompassOrientationProvider
 import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay
-import com.example.geoguesswhereiam.SeleccionUsuario
+import kotlin.math.acos
+import kotlin.math.cos
+import kotlin.math.sin
 
 class Mapa : AppCompatActivity(), MapEventsReceiver {
     private val MULTIPLE_PERMISSION_REQUEST_CODE: Int = 4
@@ -48,26 +50,22 @@ class Mapa : AppCompatActivity(), MapEventsReceiver {
         checkPermissionsState()
 
         //important! set your user agent to prevent getting banned from the osm servers
-        Configuration.getInstance().setUserAgentValue(getPackageName())
+        Configuration.getInstance().setUserAgentValue(packageName)
 
         binding = ActivityMapaBinding.inflate(layoutInflater)
         setContentView(binding.root)
         mapView = binding.map
 
-        var dificultad = SeleccionUsuario.dificultad
+        val dificultad = SeleccionUsuario.dificultad
 
-        if (dificultad == 1) {
-            intentos = 15
-            binding.txtPuntuacion.text = intentos.toString()
-
-        } else if (dificultad == 2) {
-            intentos = 10
-            binding.txtPuntuacion.text = intentos.toString()
-
-        } else if (dificultad == 3) {
-            intentos = 5
-            binding.txtPuntuacion.text = intentos.toString()
+        intentos = when (dificultad) {
+            1 -> 15
+            2 -> 10
+            3 -> 5
+            else -> 0
         }
+        binding.txtPuntuacion.text = intentos.toString()
+
         Toast.makeText(this, "Lugar seleccionado: ${SeleccionUsuario.imagen.nombre}", Toast.LENGTH_LONG).show()
         radio = SeleccionUsuario.radio
         setupMap()
@@ -94,9 +92,7 @@ class Mapa : AppCompatActivity(), MapEventsReceiver {
         if (fineLocationPermissionCheck != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(
                 this,
-                arrayOf<String>(
-                    Manifest.permission.ACCESS_FINE_LOCATION,
-                ),
+                arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
                 MULTIPLE_PERMISSION_REQUEST_CODE
             )
         }
@@ -104,41 +100,23 @@ class Mapa : AppCompatActivity(), MapEventsReceiver {
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        when (requestCode) {
-            MULTIPLE_PERMISSION_REQUEST_CODE -> {
-                if (grantResults.size > 0) {
-                    var somePermissionWasDenied = false
-                    for (result in grantResults) {
-                        if (result == PackageManager.PERMISSION_DENIED) {
-                            somePermissionWasDenied = true
-                        }
-                    }
-                    if (somePermissionWasDenied) {
-                        Toast.makeText(
-                            this,
-                            "Cant load maps without all the permissions granted",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    }
-                } else {
-                    Toast.makeText(
-                        this,
-                        "Cant load maps without all the permissions granted",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
-                return
+        if (requestCode == MULTIPLE_PERMISSION_REQUEST_CODE) {
+            if (grantResults.isNotEmpty() && grantResults.any { it == PackageManager.PERMISSION_DENIED }) {
+                Toast.makeText(
+                    this,
+                    "Cant load maps without all the permissions granted",
+                    Toast.LENGTH_SHORT
+                ).show()
             }
-
         }
     }
 
     private fun setupMap() {
         //Inicializar map
-        mapView.setClickable(true);
-        mapView.setDestroyMode(false);
+        mapView.isClickable = true
+        mapView.setDestroyMode(false)
         mapView.setTileSource(TileSourceFactory.MAPNIK) // Define la fuente de mosaicos
-        mapView.setMultiTouchControls(true)// Habilita los controles multitáctiles
+        mapView.setMultiTouchControls(true) // Habilita los controles multitáctiles
         mapView.getLocalVisibleRect(Rect())
 
         // MainActivity al implementar MapEventsReceiver, es un listener
@@ -147,7 +125,7 @@ class Mapa : AppCompatActivity(), MapEventsReceiver {
         mapView.overlays.add(MapEventsOverlay(this))
 
         //superponer brújula
-        var compassOverlay = CompassOverlay(this, InternalCompassOrientationProvider(this), mapView)
+        val compassOverlay = CompassOverlay(this, InternalCompassOrientationProvider(this), mapView)
         compassOverlay.enableCompass()
         mapView.overlays.add(compassOverlay)
 
@@ -166,12 +144,10 @@ class Mapa : AppCompatActivity(), MapEventsReceiver {
         //ponemos una fuente diferente al minimapa (opcional)
         minimapOverlay.setTileSource(TileSourceFactory.OpenTopo)
         mapView.overlays.add(minimapOverlay)
-
     }
 
     private fun myLocation() {
-
-        var mLocationOverlay = MyLocationNewOverlay(GpsMyLocationProvider(this), mapView)
+        val mLocationOverlay = MyLocationNewOverlay(GpsMyLocationProvider(this), mapView)
         mLocationOverlay.enableMyLocation()
         //si deseas que el mapa siga la ubicación del usuario
         mLocationOverlay.enableFollowLocation()
@@ -182,7 +158,7 @@ class Mapa : AppCompatActivity(), MapEventsReceiver {
             runOnUiThread {
                 //cuando tengamos ubicación
                 //Centrar y hacer Zoom hacia un marcador
-                mapView.controller.setCenter(mLocationOverlay.myLocation);
+                mapView.controller.setCenter(mLocationOverlay.myLocation)
                 mapView.controller.animateTo(mLocationOverlay.myLocation)
                 mapView.controller.setZoom(7.3)
                 mapView.invalidate() // Redibujar el mapa
@@ -192,7 +168,7 @@ class Mapa : AppCompatActivity(), MapEventsReceiver {
     }
 
     fun createMarkers() {
-
+        // Implement marker creation logic if needed
     }
 
     override fun singleTapConfirmedHelper(point: GeoPoint?): Boolean {
@@ -209,13 +185,15 @@ class Mapa : AppCompatActivity(), MapEventsReceiver {
         circle.fillPaint.color = Color.argb(50, 0, 0, 255) // Azul semitransparente
         circle.fillPaint.strokeWidth = 2.0f
         mapView.overlays.add(circle)
+
         val geoPoint = GeoPoint(SeleccionUsuario.imagen.altitud, SeleccionUsuario.imagen.latitud)
-        val acierto: Boolean = circle.isCloseTo(geoPoint, radio.toDouble(), mapView)
+        val acierto = estaDentroDelRadio(point, geoPoint, radio.toDouble())
         val intent = Intent(this, Inicio::class.java)
         if (acierto) {
             // Dialog de acierto
             if (!isFinishing && !isDestroyed) {
                 showDialog(this)
+                SeleccionUsuario.puntosTotales += 1
             }
             Handler().postDelayed({
                 if (!isFinishing && !isDestroyed) {
@@ -225,8 +203,10 @@ class Mapa : AppCompatActivity(), MapEventsReceiver {
                 }
             }, 3000)
         } else {
-            puntuacion--
-            if (puntuacion == 0) {
+            intentos -= 1
+            binding.txtPuntuacion.text = intentos.toString()
+            Toast.makeText(this, "Has fallado, vuelve a intentarlo", Toast.LENGTH_SHORT).show()
+            if (intentos == 0) {
                 // Dialog de fallo
                 if (!isFinishing && !isDestroyed) {
                     showDialogFallo(this)
@@ -247,6 +227,22 @@ class Mapa : AppCompatActivity(), MapEventsReceiver {
     override fun longPressHelper(p: GeoPoint?): Boolean {
         // Manejar pulsación larga si es necesario
         return false
+    }
+
+    private fun estaDentroDelRadio(puntoSeleccionado: GeoPoint?, puntoObjetivo: GeoPoint, radio: Double): Boolean {
+        if (puntoSeleccionado == null) return false
+        val radioTierra = 6371000.0 // Radio de la Tierra en metros
+
+        val lat1 = Math.toRadians(puntoSeleccionado.latitude)
+        val lon1 = Math.toRadians(puntoSeleccionado.longitude)
+        val lat2 = Math.toRadians(puntoObjetivo.latitude)
+        val lon2 = Math.toRadians(puntoObjetivo.longitude)
+
+        val distancia = radioTierra * acos(
+            sin(lat1) * sin(lat2) + cos(lat1) * cos(lat2) * cos(lon2 - lon1)
+        )
+
+        return distancia <= radio
     }
 }
 
@@ -270,13 +266,4 @@ private fun showDialogFallo(context: Context) {
     }
     val dialog = builder.create()
     dialog.show()
-}
-
-fun Polygon.isCloseTo(point: GeoPoint?, radius: Double, mapView: MapView): Boolean {
-    if (point == null) {
-        return false
-    }
-    val center = this.actualPoints[0]
-    val distance = point.distanceToAsDouble(center)
-    return distance <= radius // Verdadero si la distancia es menor o igual al radio, falso si no lo es
 }
