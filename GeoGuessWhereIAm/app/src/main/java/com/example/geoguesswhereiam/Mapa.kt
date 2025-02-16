@@ -66,7 +66,14 @@ class Mapa : AppCompatActivity(), MapEventsReceiver {
         }
         binding.txtPuntuacion.text = intentos.toString()
 
-        Toast.makeText(this, "Lugar seleccionado: ${SeleccionUsuario.imagen.nombre}", Toast.LENGTH_LONG).show()
+        val imagen = SeleccionUsuario.imagen
+        if (imagen == null) {
+            Toast.makeText(this, "No image selected", Toast.LENGTH_LONG).show()
+            finish()
+            return
+        }
+
+        //Toast.makeText(this, "Lugar seleccionado: ${imagen.nombre}", Toast.LENGTH_LONG).show()
         radio = SeleccionUsuario.radio
         setupMap()
         createMarkers()
@@ -186,7 +193,13 @@ class Mapa : AppCompatActivity(), MapEventsReceiver {
         circle.fillPaint.strokeWidth = 2.0f
         mapView.overlays.add(circle)
 
-        val geoPoint = GeoPoint(SeleccionUsuario.imagen.altitud, SeleccionUsuario.imagen.latitud)
+        val imagen = SeleccionUsuario.imagen
+        if (imagen == null) {
+            Toast.makeText(this, R.string.selecciona_imagen, Toast.LENGTH_SHORT).show()
+            return true
+        }
+
+        val geoPoint = GeoPoint(imagen.altitud, imagen.latitud)
         val acierto = estaDentroDelRadio(point, geoPoint, radio.toDouble())
         val intent = Intent(this, Inicio::class.java)
         if (acierto) {
@@ -194,7 +207,7 @@ class Mapa : AppCompatActivity(), MapEventsReceiver {
             if (!isFinishing && !isDestroyed) {
                 showDialog(this)
                 SeleccionUsuario.puntosTotales += 1
-                SeleccionUsuario.imagen.acertada = true
+                imagen.acertada = true
             }
             Handler().postDelayed({
                 if (!isFinishing && !isDestroyed) {
@@ -206,7 +219,7 @@ class Mapa : AppCompatActivity(), MapEventsReceiver {
         } else {
             intentos -= 1
             binding.txtPuntuacion.text = intentos.toString()
-            Toast.makeText(this, "Has fallado, vuelve a intentarlo", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, R.string.falladotap, Toast.LENGTH_SHORT).show()
             if (intentos == 0) {
                 // Dialog de fallo
                 if (!isFinishing && !isDestroyed) {
@@ -249,8 +262,8 @@ class Mapa : AppCompatActivity(), MapEventsReceiver {
 
 private fun showDialog(context: Context) {
     val builder = AlertDialog.Builder(context)
-    builder.setTitle("Victoria")
-    builder.setMessage("Has acertado la ubicación: " + SeleccionUsuario.imagen.nombre)
+    builder.setTitle(R.string.victoria)
+    builder.setMessage(R.string.acierto)
     builder.setPositiveButton("Accept") { dialog, _ ->
         dialog.dismiss()
     }
@@ -261,7 +274,7 @@ private fun showDialog(context: Context) {
 private fun showDialogFallo(context: Context) {
     val builder = AlertDialog.Builder(context)
     builder.setTitle("Derrota")
-    builder.setMessage("Te has quedado sin intentos la ubicación era: " + SeleccionUsuario.imagen.nombre)
+    builder.setMessage(R.string.error)
     builder.setPositiveButton("Accept") { dialog, _ ->
         dialog.dismiss()
     }

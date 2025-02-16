@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".VideoView">
+
+    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="VÍDEOS" app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintEnd_toEndOf="parent" app:layout_constraintHorizontal_bias="0.498" app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toTopOf="parent" app:layout_constraintVertical_bias="0.058"/>
+    <VideoView android:id="@+id/vv" android:layout_width="377dp" android:layout_height="212dp" app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintEnd_toEndOf="parent" app:layout_constraintHorizontal_bias="0.529" app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toTopOf="parent" app:layout_constraintVertical_bias="0.231"/>
+    <Button android:id="@+id/botPlay" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="PLAY" app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintEnd_toEndOf="parent" app:layout_constraintHorizontal_bias="0.105" app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toBottomOf="@+id/vv" app:layout_constraintVertical_bias="0.091"/>
+    <Button android:id="@+id/botPausar" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="PAUSAR" app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintEnd_toEndOf="parent" app:layout_constraintHorizontal_bias="0.786" app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toBottomOf="@+id/vv" app:layout_constraintVertical_bias="0.091"/>
+    <Button android:id="@+id/botDetener" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="STOP" app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintEnd_toEndOf="parent" app:layout_constraintHorizontal_bias="0.752" app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toBottomOf="@+id/vv" app:layout_constraintVertical_bias="0.273"/>
+    <Button android:id="@+id/botContinuar" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="CONTINUAR" app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintEnd_toEndOf="parent" app:layout_constraintHorizontal_bias="0.119" app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toBottomOf="@+id/vv" app:layout_constraintVertical_bias="0.273"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

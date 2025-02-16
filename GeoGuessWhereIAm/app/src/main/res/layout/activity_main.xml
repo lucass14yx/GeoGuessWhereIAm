@@ -10,19 +10,19 @@
 
 
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/txtWelcome"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
-        android:layout_marginTop="1dp"
         android:layout_marginEnd="10dp"
-        android:text="Welcome!"
+        android:layout_marginBottom="292dp"
+        android:text="@string/bienvenido"
+        android:textAlignment="center"
         android:textColor="#FFFFFF"
         android:textSize="34sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintStart_toStartOf="parent" />
 
     <ImageView
         android:id="@+id/imageView"
@@ -33,10 +33,11 @@
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="24dp"
         android:fontFamily="serif-monospace"
-        app:layout_constraintBottom_toTopOf="@+id/textView"
+        app:layout_constraintBottom_toTopOf="@+id/txtWelcome"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.593"
         app:srcCompat="@mipmap/logo_app_round" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

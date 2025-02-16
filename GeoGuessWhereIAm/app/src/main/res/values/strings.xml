@@ -6,5 +6,16 @@
     <string name="dificil">Dificil 😈</string>
     <string name="selecciona_dificultad">Selecciona la dificultad para jugar 🎮</string>
     <string name="jugar">Jugar</string>
-    <string name="puntuacion">Puntuación </string>
+    <string name="puntuacion">Puntuación: </string>
+    <string name="acercade">Acerca de</string>
+    <string name="puntuaciontotal">Puntuación total</string>
+    <string name="acierto">Has acertado la ubicación! :</string>
+    <string name="error">Has fallado la ubicación, intentalo de nuevo!</string>
+    <string name="victoria">Victoria</string>
+    <string name="bienvenido">Bienvenido a GeoGuessWhereIAm</string>
+    <string name="acertado">Ya has acertado este lugar!</string>
+    <string name="infopuntos">Por cada lugar que aciertas se te dará un punto!</string>
+    <string name="falladotap">Has fallado, vuelve a intentarlo</string>
+    <string name="selecciona_imagen">Selecciona una imagen haciendo click en ella</string>
+    <string name="acerca_de">GeoGuessWhereIAm es una aplicación interactiva y educativa que desafía a los usuarios a adivinar la ubicación de un lugar dado en un mapa. Los usuarios pueden seleccionar diferentes niveles de dificultad, que determinan el número de intentos que tienen y el radio dentro del cual deben adivinar la ubicación. La aplicación ofrece una forma divertida de probar y mejorar el conocimiento geográfico, con características como seguimiento de ubicación en tiempo real, superposiciones de mapas y marcadores visuales. Los usuarios también pueden ver sus puntos totales y aprender más sobre la aplicación a través de la sección "Acerca de". Desarrollado por Alejandro y Lucas para el módulo de PMDM</string>
 </resources>
