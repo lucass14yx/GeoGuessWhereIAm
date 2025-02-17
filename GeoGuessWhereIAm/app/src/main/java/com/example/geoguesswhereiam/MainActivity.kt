@@ -21,7 +21,7 @@ class MainActivity : AppCompatActivity() {
 
         val intent = Intent(this, Inicio::class.java)
         lifecycleScope.launch {
-            delay(4000) // Espera 4 segundos
+            delay(4000) // Espera 4 segundos y arranca Inicio
             startActivity(intent)
             finish()
         }

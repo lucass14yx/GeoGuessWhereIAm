@@ -14,16 +14,15 @@ class ContenedorPuntuacion : AppCompatActivity() {
         enableEdgeToEdge()
         setContentView(binding.root)
 
+        // Asigna los puntos totales al TextView
         binding.txtPNum.text = SeleccionUsuario.puntosTotales.toString()
 
-
+        // Se recorre la lista de imagenes y se muestra el nombre de las imagenes acertadas
         ImagenesProvider.imagenesList.forEach {
             if(it.acertada){
                 binding.txtLista.text = binding.txtLista.text.toString() + it.nombre
             }
         }
-
-
 
     }
 

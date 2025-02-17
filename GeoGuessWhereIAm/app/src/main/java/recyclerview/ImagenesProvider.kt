@@ -4,13 +4,8 @@ import com.example.geoguesswhereiam.Imagen
 import com.example.geoguesswhereiam.R
 
 object ImagenesProvider {
-//    val imagenesList = arrayListOf(
-//        "alicante",
-//        "navarra",
-//        "pontevedra",
-//        "sevilla",
-//        "toledoo"
-//    )
+
+    // Proveedor de imágenes que se mostrarán en el RecyclerView
 
     val imagenesList = arrayListOf(
         Imagen(R.drawable.alicante, 38.34517, -0.48149,"Alicante",false),

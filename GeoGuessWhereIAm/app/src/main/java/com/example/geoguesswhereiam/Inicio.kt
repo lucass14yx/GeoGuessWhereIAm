@@ -27,11 +27,12 @@ class Inicio : AppCompatActivity() {
         binding = ActivityInicioBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // Configurar Toolbar
+        // Configurar la barra de herramientas (Toolbar)
         val toolbar: Toolbar = binding.toolbar
         setSupportActionBar(toolbar)
         initRecyclerView()
 
+        // Configurar el botón de cambio de volumen
         binding.btnSwitchVolume.setOnClickListener {
             if (SeleccionUsuario.sound) {
                 binding.btnSwitchVolume.setImageResource(R.drawable.volumenoff)
@@ -44,8 +45,9 @@ class Inicio : AppCompatActivity() {
             }
         }
 
+        // Configurar los botones de selección de dificultad
         binding.btnFacil.setOnClickListener {
-            SeleccionUsuario.dificultad = 1 // "facil"
+            SeleccionUsuario.dificultad = 1 // "fácil"
             SeleccionUsuario.radio = 10000
         }
         binding.btnMedia.setOnClickListener {
@@ -53,10 +55,11 @@ class Inicio : AppCompatActivity() {
             SeleccionUsuario.radio = 5000
         }
         binding.btnDificil.setOnClickListener {
-            SeleccionUsuario.dificultad = 3 //"dificil"
+            SeleccionUsuario.dificultad = 3 // "difícil"
             SeleccionUsuario.radio = 2500
         }
 
+        // Configurar el botón de jugar
         binding.btnJugar.setOnClickListener {
             if (SeleccionUsuario.dificultad == 0) {
                 Toast.makeText(this, R.string.selecciona_dificultad, Toast.LENGTH_SHORT).show()
@@ -70,7 +73,7 @@ class Inicio : AppCompatActivity() {
 
             if (SeleccionUsuario.imagen!!.acertada) {
                 Toast.makeText(this, R.string.acertado, Toast.LENGTH_SHORT).show()
-                if(SeleccionUsuario.imagen!!.nombre == "Toledo") {
+                if (SeleccionUsuario.imagen!!.nombre == "Toledo") {
                     val intent = Intent(this, VideoView::class.java)
                     startActivity(intent)
                 }
@@ -83,6 +86,7 @@ class Inicio : AppCompatActivity() {
             finish()
         }
 
+        // Configurar el listener para el RecyclerView
         binding.rvImages.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
                 super.onScrollStateChanged(recyclerView, newState)
@@ -93,6 +97,7 @@ class Inicio : AppCompatActivity() {
         })
     }
 
+    // Inicializar el RecyclerView
     private fun initRecyclerView() {
         val manager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
         binding.rvImages.layoutManager = manager
@@ -103,12 +108,14 @@ class Inicio : AppCompatActivity() {
         binding.rvImages.addItemDecoration(decoration)
     }
 
+    // Asignar la imagen visible en el RecyclerView a la selección del usuario
     private fun asignarImagenVisible(binding: ActivityInicioBinding) {
         val layoutManager = binding.rvImages.layoutManager as LinearLayoutManager
         val position = layoutManager.findFirstVisibleItemPosition()
         SeleccionUsuario.imagen = ImagenesProvider.imagenesList[position]
     }
 
+    // Verificar si un punto seleccionado está dentro del radio de un punto objetivo
     private fun estaDentroDelRadio(puntoSeleccionado: GeoPoint, puntoObjetivo: GeoPoint, radio: Double): Boolean {
         val radioTierra = 6371000.0 // Radio de la Tierra en metros
         val lat1 = Math.toRadians(puntoSeleccionado.latitude)

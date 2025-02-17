@@ -1,5 +1,8 @@
 package com.example.geoguesswhereiam
 
+
+// Clase que almacena los datos seleccionados por el usuario
+
 object SeleccionUsuario {
     var imagen: Imagen? = null
     var dificultad: Int = 0
