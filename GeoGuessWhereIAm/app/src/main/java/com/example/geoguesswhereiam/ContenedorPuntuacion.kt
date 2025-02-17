@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import com.example.geoguesswhereiam.databinding.ActivityContenedorPuntuacionBinding
+import recyclerview.ImagenesProvider
 
 class ContenedorPuntuacion : AppCompatActivity() {
     private lateinit var binding : ActivityContenedorPuntuacionBinding
@@ -13,7 +14,18 @@ class ContenedorPuntuacion : AppCompatActivity() {
         enableEdgeToEdge()
         setContentView(binding.root)
 
-        binding.txtPuntuacionTotal.text = SeleccionUsuario.puntosTotales.toString()
+        binding.txtPNum.text = SeleccionUsuario.puntosTotales.toString()
+
+
+        ImagenesProvider.imagenesList.forEach {
+            if(it.acertada){
+                binding.txtLista.text = binding.txtLista.text.toString() + it.nombre
+            }
+        }
+
+
 
     }
+
+
 }

@@ -8,6 +8,7 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.graphics.Rect
+import android.media.MediaPlayer
 import android.os.Bundle
 import android.os.Handler
 import android.util.DisplayMetrics
@@ -32,6 +33,7 @@ import org.osmdroid.views.overlay.compass.InternalCompassOrientationProvider
 import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay
 import kotlin.math.acos
+import kotlin.math.atan2
 import kotlin.math.cos
 import kotlin.math.sin
 
@@ -159,7 +161,7 @@ class Mapa : AppCompatActivity(), MapEventsReceiver {
         //si deseas que el mapa siga la ubicación del usuario
         mLocationOverlay.enableFollowLocation()
         //cambiar icono
-        val icon: Bitmap = BitmapFactory.decodeResource(resources, R.drawable.coche)
+        val icon: Bitmap = BitmapFactory.decodeResource(resources, R.drawable.you)
         mLocationOverlay.setDirectionIcon(icon)
         mLocationOverlay.runOnFirstFix {
             runOnUiThread {
@@ -203,6 +205,12 @@ class Mapa : AppCompatActivity(), MapEventsReceiver {
         val acierto = estaDentroDelRadio(point, geoPoint, radio.toDouble())
         val intent = Intent(this, Inicio::class.java)
         if (acierto) {
+            val mediaPlayer = MediaPlayer.create(this, R.raw.acierto)
+
+            if(SeleccionUsuario.sound) {
+                mediaPlayer.start()
+            }
+
             // Dialog de acierto
             if (!isFinishing && !isDestroyed) {
                 showDialog(this)
@@ -219,7 +227,19 @@ class Mapa : AppCompatActivity(), MapEventsReceiver {
         } else {
             intentos -= 1
             binding.txtPuntuacion.text = intentos.toString()
-            Toast.makeText(this, R.string.falladotap, Toast.LENGTH_SHORT).show()
+
+
+            // Calculate the bearing and determine the direction
+            val bearing = calculateBearing(point!!, geoPoint)
+            val direction = when {
+                bearing in 45.0..135.0 -> R.string.este
+                bearing in 135.0..225.0 -> R.string.sur
+                bearing in 225.0..315.0 -> R.string.oeste
+                else -> R.string.norte
+            }
+
+            Toast.makeText(this, getString(R.string.fallo_direccion) + " " + getString(direction), Toast.LENGTH_SHORT).show()
+
             if (intentos == 0) {
                 // Dialog de fallo
                 if (!isFinishing && !isDestroyed) {
@@ -241,6 +261,18 @@ class Mapa : AppCompatActivity(), MapEventsReceiver {
     override fun longPressHelper(p: GeoPoint?): Boolean {
         // Manejar pulsación larga si es necesario
         return false
+    }
+
+    private fun calculateBearing(start: GeoPoint, end: GeoPoint): Double {
+        val lat1 = Math.toRadians(start.latitude)
+        val lon1 = Math.toRadians(start.longitude)
+        val lat2 = Math.toRadians(end.latitude)
+        val lon2 = Math.toRadians(end.longitude)
+
+        val dLon = lon2 - lon1
+        val y = sin(dLon) * cos(lat2)
+        val x = cos(lat1) * sin(lat2) - sin(lat1) * cos(lat2) * cos(dLon)
+        return (Math.toDegrees(atan2(y, x)) + 360) % 360
     }
 
     private fun estaDentroDelRadio(puntoSeleccionado: GeoPoint?, puntoObjetivo: GeoPoint, radio: Double): Boolean {
@@ -273,7 +305,7 @@ private fun showDialog(context: Context) {
 
 private fun showDialogFallo(context: Context) {
     val builder = AlertDialog.Builder(context)
-    builder.setTitle("Derrota")
+    builder.setTitle(R.string.derrota)
     builder.setMessage(R.string.error)
     builder.setPositiveButton("Accept") { dialog, _ ->
         dialog.dismiss()

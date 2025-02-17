@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">GeoGuessWhereIAm</string>
+    <string name="seleccion_lugar">Select the place you intend to guess 😉</string>
+    <string name="facil">Easy 😃</string>
+    <string name="media">Medium 😐</string>
+    <string name="dificil">Hard 😈</string>
+    <string name="selecciona_dificultad">Select the difficulty to play 🎮</string>
+    <string name="jugar">Play</string>
+    <string name="puntuacion">Score: </string>
+    <string name="acercade">About</string>
+    <string name="puntuaciontotal">Total Score</string>
+    <string name="acierto">You guessed the location correctly! </string>
+    <string name="error">You missed the location, try again!</string>
+    <string name="victoria">Victory</string>
+    <string name="derrota">Defeat</string>
+    <string name="sonidoon">Volume on</string>
+    <string name="sonidooff">Volume off</string>
+    <string name="fallo_direccion">You failed, the place is to the </string>
+    <string name="bienvenido">Welcome to GeoGuessWhereIAm</string>
+    <string name="acertado">You have already guessed this place!</string>
+    <string name="infopuntos">For every correct guess, you will earn a point!</string>
+    <string name="falladotap">You missed, try again</string>
+    <string name="selecciona_imagen">Select an image by clicking on it</string>
+    <string name="imagenes_acertadas">Correctly guessed images: </string>
+    <string name="norte">North</string>
+    <string name="sur">South</string>
+    <string name="este">East</string>
+    <string name="oeste">West</string>
+    <string name="acerca_de">GeoGuessWhereIAm is an interactive and educational application that challenges users to guess the location of a given place on a map. Users can select different difficulty levels, which determine the number of attempts they have and the radius within which they must guess the location. The application provides a fun way to test and improve geographic knowledge, with features such as real-time location tracking, map overlays, and visual markers. Users can also view their total points and learn more about the app through the "About" section. Developed by Alejandro and Lucas for the PMDM module.</string>
+</resources>

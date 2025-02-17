@@ -32,6 +32,18 @@ class Inicio : AppCompatActivity() {
         setSupportActionBar(toolbar)
         initRecyclerView()
 
+        binding.btnSwitchVolume.setOnClickListener {
+            if (SeleccionUsuario.sound) {
+                binding.btnSwitchVolume.setImageResource(R.drawable.volumenoff)
+                SeleccionUsuario.sound = false
+                Toast.makeText(this, R.string.sonidooff, Toast.LENGTH_SHORT).show()
+            } else {
+                Toast.makeText(this, R.string.sonidoon, Toast.LENGTH_SHORT).show()
+                binding.btnSwitchVolume.setImageResource(R.drawable.volumenon)
+                SeleccionUsuario.sound = true
+            }
+        }
+
         binding.btnFacil.setOnClickListener {
             SeleccionUsuario.dificultad = 1 // "facil"
             SeleccionUsuario.radio = 10000
